@@ -1,0 +1,160 @@
+---
+title: "QMM_ASSIGNMENT1"
+author: "Durga Chowdary Koduru Lokesh"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+
+Question 1
+
+1. Clearly Define the Decision Variables
+
+Let us consider Collegiate and Mini as Back Savers company’s decision variables
+C= Collegiate
+M= Mini
+
+- \(C\): Number of Collegiate backpacks to produce per week.
+- \(M\): Number of Mini backpacks to produce per week.
+
+
+2. What is the Objective Function?
+
+Objective : Management wishes to know what quantity of each type of backpack to produce per week to get the maximum profit
+
+Maximize the total profit (\(Z\)):
+
+\[Z = 32C + 24M\]
+
+
+3. What are the Constraints?
+
+1. Material Constraint:
+
+\[
+3C + 2M \leq 5000
+\]
+
+2. Sales Constraints:
+
+\[
+C \leq 1000
+\]
+
+\[
+M \leq 1200
+\]
+
+3. Labor Constraint:
+
+\[
+45C + 40M \leq 35 \times 40 \times 60
+\]
+
+4. Non-negativitM Constraints:
+
+\[
+C \geq 0
+\]
+
+\[
+M \geq 0
+\]
+
+
+
+# Solution using 
+
+```{r}
+library(lpSolve)
+
+# Define the objective function coefficients
+obj_coef <- c(32, 24)
+
+# Define the matrix of constraint coefficients
+mat_coef <- matrix(c(3, 2, 1, 0, 0, 1, 45, 40), ncol = 2, byrow = TRUE)
+
+# Define the right-hand side of constraints
+rhs <- c(5000, 1000, 1200, 35 * 40 * 60)
+
+# Define the constraint types (<=)
+con_types <- rep("<=", length(rhs))
+
+# Solve the linear programming problem
+lp_result <- lp("max", obj_coef, mat_coef, con_types, rhs)
+
+# Print the solution
+cat("Collegiate backpacks to produce per week:", lp_result$solution[1], "\n")
+cat("Mini backpacks to produce per week:", lp_result$solution[2], "\n")
+cat("Maximum profit per week:", lp_result$objval, "\n")
+```
+
+
+
+Question 2
+
+1. Define the decision variables
+
+Decision Variables are the number of units of the new product, regardless its size that should be produced on each plant to maximize the weigelt corporation’s profit.
+
+
+Let's define the decision variables:
+- \(C_1\): The number of large-sized units produced at Plant 1.
+- \(C_2\): The number of medium-sized units produced at Plant 2.
+- \(C_3\): The number of small-sized units produced at Plant 3.
+
+## Objective Function
+
+MaCimize the total profit (\(Z\)):
+\[Z = 420C_1 + 360C_2 + 300C_3\]
+
+## Constraints
+
+1. CapacitM Constraints:
+   - Plant 1 can produce up to 750 units per daM.
+   - Plant 2 can produce up to 900 units per daM.
+   - Plant 3 can produce up to 450 units per daM.
+   \[C_1 \leq 750\]
+   \[C_2 \leq 900\]
+   \[C_3 \leq 450\]
+
+2. Storage Space Constraints:
+   - Plant 1 has 13,000 square feet of in-process storage space.
+   - Plant 2 has 12,000 square feet of in-process storage space.
+   - Plant 3 has 5,000 square feet of in-process storage space.
+   - Each unit of the large, medium, and small sizes produced per daM requires 20, 15, and 12 square feet, respectivelM.
+   \[20C_1 + 15C_2 + 12C_3 \leq 13,000\]
+   \[20C_1 + 15C_2 + 12C_3 \leq 12,000\]
+   \[20C_1 + 15C_2 + 12C_3 \leq 5,000\]
+
+3. Sales Forecasts:
+   - Sales forecasts indicate that if available, 900, 1,200, and 750 units of the large, medium, and small sizes, would be sold per daM.
+   \[C_1 \leq 900\]
+   \[C_2 \leq 1200\]
+   \[C_3 \leq 750\]
+
+4. Non-negativitM Constraints:
+   \[C_1 \geq 0\]
+   \[C_2 \geq 0\]
+   \[C_3 \geq 0\]
+
+5. Percentage constraint - 
+
+Assume,
+
+A1 = LC1 + MC1 + SC1
+
+A2 = LC2 + MC2 + SC2
+
+A3 = LC3 + MC3 + SC3
+                        $$ (A1 / 750)* 100 $$
+                        $$ (A2 / 900)* 100 $$
+                        $$ (A3 / 450)* 100 $$
+
+Non-negativity of decision variables - $$ (LC1, MC1, SC1, LC2, MC2, SC2, LC3, MC3 \hspace {.2cm} and \hspace {.2cm} SC3)\ge 0 $$
